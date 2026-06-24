@@ -1,8 +1,6 @@
-import {
-  createContext, useContext, useState, useMemo,
-} from 'react';
-import { useLocalStorage } from '@/hooks/utils/use-local-storage';
-import { useConfig } from '@/context/character-config-context';
+import { createContext, useContext, useState, useMemo } from "react";
+import { useLocalStorage } from "@/hooks/utils/use-local-storage";
+import { useConfig } from "@/context/character-config-context";
 
 /**
  * Model emotion mapping interface
@@ -41,6 +39,9 @@ export interface ModelInfo {
 
   /** Model URL */
   url: string;
+
+  /** Model type: "Live2D" or "VRM" */
+  modelType?: string;
 
   /** Scale factor */
   kScale: number;
@@ -97,14 +98,20 @@ const DEFAULT_CONFIG = {
 /**
  * Create the Live2D configuration context
  */
-export const Live2DConfigContext = createContext<Live2DConfigState | null>(null);
+export const Live2DConfigContext = createContext<Live2DConfigState | null>(
+  null,
+);
 
 /**
  * Live2D Configuration Provider Component
  * @param {Object} props - Provider props
  * @param {React.ReactNode} props.children - Child components
  */
-export function Live2DConfigProvider({ children }: { children: React.ReactNode }) {
+export function Live2DConfigProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const { confUid } = useConfig();
 
   const [isLoading, setIsLoading] = useState(DEFAULT_CONFIG.isLoading);
@@ -168,7 +175,9 @@ export function useLive2DConfig() {
   const context = useContext(Live2DConfigContext);
 
   if (!context) {
-    throw new Error('useLive2DConfig must be used within a Live2DConfigProvider');
+    throw new Error(
+      "useLive2DConfig must be used within a Live2DConfigProvider",
+    );
   }
 
   return context;
